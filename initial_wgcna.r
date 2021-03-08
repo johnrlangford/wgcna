@@ -1,6 +1,6 @@
 library(WGCNA)
-library(DESeq2)
-library(org.Hs.egENSEMBL2EG)
+
+
 options(stringsAsFactors = FALSE)
 expr <- read.table("BritBams_normalized_counts.txt", header = TRUE, sep="\t",
                  row.names=1)
@@ -14,8 +14,13 @@ expr <- data.frame(expr)
 
 #pick random subset of 1000 genes
 
-genes <- sample(names(expr),30000)
+geneMeans <- sapply(expr,mean)
 
+geneOrder <- order(geneMeans, decreasing=TRUE)
+
+highExprGenes <- geneOrder[1:1000]
+
+expr <- expr[,highExprGenes]
 expr <- expr[ , genes]
 expr <- log2(expr+1)
 powers = c(c(1:10), seq(from=12, to=20, by=2))
@@ -37,7 +42,7 @@ plot(sft$fitIndices[,1], sft$fitIndices[,5],
 text(sft$fitIndices[,1], sft$fitIndices[,5], labels=powers, cex=cex1,col="red")
 
 cor <- WGCNA::cor
-net = blockwiseModules(expr, power = 4,
+net = blockwiseModules(expr, power = 6,
                        TOMType = "unsigned", minModuleSize = 30,
                        reassignThreshold = 0, mergeCutHeight = 0.25,
                        numericLabels = TRUE, pamRespectsDendro = FALSE,
