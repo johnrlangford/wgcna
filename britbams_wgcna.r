@@ -15,7 +15,7 @@ geneMeans = apply(as.matrix(expr),FUN=mean, MARGIN=2)
 #not necessary though
 
 #get n most highly expressed genes
-n=1000
+n=10000
 highexprs = tail(sort(geneMeans),n=n)
 
 expr = expr[ , names(highexprs)]
@@ -31,7 +31,7 @@ plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="",
 
 #dendrogram shows 1 outlier HG00102
 
-clust = cutree(sampleTree, h=22)
+clust = cutree(sampleTree, h=70)
 table(clust)
 
 keepSamples = clust==1
@@ -65,8 +65,8 @@ text(sft$fitIndices[,1], sft$fitIndices[,5], labels=powers, cex=cex1,col="red")
 
 #pick first power that gives approximate scale independence
 #net is reference to module object
-net = blockwiseModules(expr, power = 6,
-                       TOMType = "unsigned", minModuleSize = 15,
+net = blockwiseModules(expr, power = 10,
+                       TOMType = "unsigned", minModuleSize = 25,
                        reassignThreshold = 0, mergeCutHeight = 0.25,
                        numericLabels = TRUE, pamRespectsDendro = FALSE,
                        saveTOMs = TRUE,
